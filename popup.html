@@ -1,0 +1,83 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+  <script src="popup.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/3.0.0/pretty-checkbox.min.css">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 14px;
+      padding: 10px;
+      width: 400px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .url-item {
+      display: flex;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .url-item input {
+      margin-right: 4px;
+    }
+    .url-item.error input {
+      border-color: red;
+    }
+
+    input {
+      border-radius: 4px;
+      padding: 5px;
+      width: 100%;
+      resize: none;
+      border: 1px solid #d4d4d4;
+    }
+
+    button {
+      background-color: transparent;
+      border: 1px solid #8c8c8c;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #8c8c8c;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="field">
+      <div class="pretty p-switch p-fill">
+          <input type="checkbox" v-model="enabled" />
+          <div class="state label">
+              <label>Enabled</label>
+          </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="label">Delay (ms):</div>
+      <input class="input" type="number" v-model="delay" />
+    </div>
+    <div class="field">
+      <div class="label">URLs:</div>
+      <div v-for="(url, index) in urls" class="url-item"  v-bind:class="{ error: url.error }">
+        <input class="input" v-model.trim="url.url" />
+        <button v-on:click="removeUrlInput(index)">Remove</button>
+      </div>
+    </div>
+    <div class="field">
+      <button v-on:click="addUrlInput">Add</button>
+    </div>
+  </div>
+</body>
+</html>
