@@ -16,9 +16,9 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     if (throttlerConfig.enabled && urls.length > 0) {
       chrome.browserAction.setIcon({path: 'icon48-warning.png'});
       handler = (info) => {
-        console.log("Intercepted: " + info.url);
+        console.log(`URL Throttler: Intercepted ${info.url}, going to wait ${throttlerConfig.delay} ms...`);
         delay(throttlerConfig.delay);
-        console.log('returned');
+        console.log('URL Throttler: Done');
         return;
       };
       console.log('Blocking urls', urls);

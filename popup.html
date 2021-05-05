@@ -25,6 +25,11 @@
       font-weight: bold;
     }
 
+    .label-help {
+      margin-top: 4px;
+      color: lightslategray;
+    }
+
     .url-item {
       display: flex;
       align-items: center;
@@ -70,6 +75,15 @@
     </div>
     <div class="field">
       <div class="label">URLs:</div>
+      <div class="label-help">
+        URLs must use the <a href="https://developer.chrome.com/docs/extensions/mv2/match_patterns/" target="_blank">Match pattern</a> syntax.
+        <br />
+        Examples:
+        <br/>
+        <code>http://127.0.0.1/*</code>
+        <br />
+        <code>*://foobar.com/foo.html</code>
+      </div>
       <div v-for="(url, index) in urls" class="url-item"  v-bind:class="{ error: url.error }">
         <input class="input" v-model.trim="url.url" />
         <button v-on:click="removeUrlInput(index)">Remove</button>
