@@ -11,7 +11,7 @@
       font-family: sans-serif;
       font-size: 14px;
       padding: 10px;
-      width: 400px;
+      width: 500px;
     }
 
     .field {
@@ -50,6 +50,14 @@
       border: 1px solid #d4d4d4;
     }
 
+    input.delayInput {
+      width: 100px;
+    }
+
+    input[type="checkbox"] {
+      width: 40px;
+    }
+
     button {
       background-color: transparent;
       border: 1px solid #8c8c8c;
@@ -71,7 +79,7 @@
     </div>
     <div class="field">
       <div class="label">Delay (ms):</div>
-      <input class="input" type="number" v-model="delay" />
+      <input class="input" type="number" v-model="defaultDelay" />
     </div>
     <div class="field">
       <div class="label">URLs:</div>
@@ -79,18 +87,27 @@
         URLs must use the <a href="https://developer.chrome.com/docs/extensions/mv2/match_patterns/" target="_blank">Match pattern</a> syntax.
         <br />
         Examples:
-        <br/>
+        <br />
         <code>http://127.0.0.1/*</code>
         <br />
-        <code>*://foobar.com/foo.html</code>
+        <code>*://*/api/foo</code>
+        <br />
+        If no delay is specified below, delay will default to the value specified above.
       </div>
       <div v-for="(url, index) in urls" class="url-item"  v-bind:class="{ error: url.error }">
+        <input type="checkbox" v-model="url.checked" v-bind:id="url.id">
+        <input class="input delayInput" v-model.trim="url.delay" placeholder="Delay (in ms)" />
         <input class="input" v-model.trim="url.url" />
         <button v-on:click="removeUrlInput(index)">Remove</button>
       </div>
     </div>
     <div class="field">
       <button v-on:click="addUrlInput">Add</button>
+    </div>
+    <div class="field">
+      <em style="color: rgba(53,142,8,.9);">
+        <span id="lastChangeTime"></span>
+      </em>
     </div>
   </div>
 </body>
