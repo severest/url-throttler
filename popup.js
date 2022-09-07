@@ -4,7 +4,14 @@ const defaultURL = {
 };
 const urlRegex = /^(https?|\*):\/\/.*\/.*$/;
 var lastChangeTarget;
-var fadeEffect;
+let fadeOut = (target) => setInterval(function () {
+  if (target.style.opacity > 0) {
+    target.style.opacity -= 0.1;
+  } else {
+      clearInterval(fadeEffect);
+      target.innerHTML = "";
+  }
+}, 250);
 
 chrome.storage.local.get(['requestThrottler'], (result) => {
   const data = Object.assign(
@@ -19,6 +26,25 @@ chrome.storage.local.get(['requestThrottler'], (result) => {
     el: '#app',
     data: data,
     methods: {
+      applyConfig: function() {
+        let newConfig = prompt('Please input new config (it should appear in JSON format as in example below), or leave as {} to reset.\n\n{"defaultDelay":"5000","enabled":true,"urls":[{"checked":true,"error":false,"url":"*://*/api/foo"},{"checked":true,"delay":"2000","error":false,"url":"https://joecoyle.net/api/bar"}]}\n', "{}");
+        try {
+          chrome.storage.local.set({'requestThrottler': JSON.parse(newConfig)}, function() {
+            location.reload();
+          });
+        } catch {
+          alert("Error applying config. Is your JSON formatting correct?");
+        }
+      },
+      copyCurrentConfig: function() {
+        chrome.storage.local.get((config) => {
+          navigator.clipboard.writeText(JSON.stringify(config["requestThrottler"]));
+          lastChangeTarget = document.getElementById("messageDisplay");
+          lastChangeTarget.innerHTML = "Configuration copied to clipboard";
+          lastChangeTarget.style.opacity = 1;
+          fadeOut(lastChangeTarget);
+        });
+      },
       addUrlInput: function() {
         this.urls = this.urls.concat({ ...defaultURL });
       },
@@ -40,18 +66,10 @@ chrome.storage.local.get(['requestThrottler'], (result) => {
         if(JSON.stringify(currStorage) != JSON.stringify(newStorage)) {
           this.updateStorage(newStorage);
           
-          lastChangeTarget = document.getElementById("lastChangeTime");
+          lastChangeTarget = document.getElementById("messageDisplay");
           lastChangeTarget.innerHTML = "Changes saved @ " + (new Date).toLocaleTimeString();
           lastChangeTarget.style.opacity = 1;
-          
-          fadeEffect = setInterval(function () {
-            if (lastChangeTarget.style.opacity > 0) {
-              lastChangeTarget.style.opacity -= 0.1;
-            } else {
-                clearInterval(fadeEffect);
-                lastChangeTarget.innerHTML = "";
-            }
-          }, 250);
+          fadeOut(lastChangeTarget);
         }
       });
     }, 700)

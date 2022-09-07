@@ -102,11 +102,16 @@
       </div>
     </div>
     <div class="field">
-      <button v-on:click="addUrlInput">Add</button>
+      <button v-on:click="addUrlInput">Add URL</button>
+    </div>
+    <hr />
+    <div class="field">
+      <button v-on:click="copyCurrentConfig">Copy Current Config</button>
+      <button v-on:click="applyConfig">Apply New Config</button>
     </div>
     <div class="field">
       <em style="color: rgba(53,142,8,.9);">
-        <span id="lastChangeTime"></span>
+        <span id="messageDisplay"></span>
       </em>
     </div>
   </div>
