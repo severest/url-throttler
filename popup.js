@@ -28,12 +28,14 @@ chrome.storage.local.get(['requestThrottler'], (result) => {
     methods: {
       applyConfig: function() {
         let newConfig = prompt('Please input new config (it should appear in JSON format as in example below), or leave as {} to reset.\n\n{"defaultDelay":"5000","enabled":true,"urls":[{"checked":true,"error":false,"url":"*://*/api/foo"},{"checked":true,"delay":"2000","error":false,"url":"https://joecoyle.net/api/bar"}]}\n', "{}");
-        try {
-          chrome.storage.local.set({'requestThrottler': JSON.parse(newConfig)}, function() {
-            location.reload();
-          });
-        } catch {
-          alert("Error applying config. Is your JSON formatting correct?");
+        if(newConfig) {
+          try {
+            chrome.storage.local.set({'requestThrottler': JSON.parse(newConfig)}, function() {
+              location.reload();
+            });
+          } catch {
+            alert("Error applying config. Is your JSON formatting correct?");
+          }
         }
       },
       copyCurrentConfig: function() {
